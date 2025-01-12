@@ -24,9 +24,19 @@ hotels = [
 async def get_hotels(
     id: int | None = Query(default=None),
     title: str | None = Query(default=None),
+    page: int | None = Query(default=None),
+    per_page: int | None = Query(default=None),
 ):
+
+    if page is None:
+        page = 1
+    if per_page is None:
+        per_page = 3
+
     if id == None and title == None:
-        return hotels
+        return [hotels[i : i + per_page] for i in range(0, len(hotels), per_page)][
+            page - 1
+        ]
     return [hotel for hotel in hotels if hotel["title"] == title or hotel["id"] == id]
 
 
