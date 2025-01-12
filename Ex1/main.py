@@ -11,7 +11,11 @@ hotels = [
 
 
 # GET
-@app.get("/hotels")
+@app.get(
+    "/hotels",
+    summary="Получение отелей",
+    description="<h1>Развернутое описание</h1>",
+)
 async def get_hotels(
     id: int | None = Query(default=None),
     title: str | None = Query(default=None),
@@ -59,12 +63,11 @@ async def patch_hotel(
     name: str | None = Body(None),
 ):
     global hotels
-    for hotel in hotels:
-        if hotel["id"] == hotel_id:
-            if title:
-                hotel["title"] = title
-            if name:
-                hotel["name"] = name
+    hotel = [hotel for hotel in hotels if hotel["id"] == hotel_id][0]
+    if title is not None:
+        hotel["title"] = title
+    if name is not None:
+        hotel["name"] = name
     return {"status": "ok"}
 
 
