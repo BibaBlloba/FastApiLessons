@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Body, FastAPI, Query
 
 from src.api.dependencies import PaginationDap
+from src.database import async_session_maker
 from src.schemas.hotels import Hotel, HotelPATCH
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 
 hotels = [
-    {"id": 1, "title": "Sochi", "name": "sochi"},
-    {"id": 2, "title": "Дубай", "name": "dubai"},
-    {"id": 3, "title": "Мальдивы", "name": "maldivi"},
-    {"id": 4, "title": "Геленджик", "name": "gelendzhik"},
-    {"id": 5, "title": "Москва", "name": "moscow"},
-    {"id": 6, "title": "Казань", "name": "kazan"},
-    {"id": 7, "title": "Санкт-Петербург", "name": "spb"},
+    {"id": 1, "title": "Sochi", "location": "sochi"},
+    {"id": 2, "title": "Дубай", "location": "dubai"},
+    {"id": 3, "title": "Мальдивы", "location": "maldivi"},
+    {"id": 4, "title": "Геленджик", "location": "gelendzhik"},
+    {"id": 5, "title": "Москва", "location": "moscow"},
+    {"id": 6, "title": "Казань", "location": "kazan"},
+    {"id": 7, "title": "Санкт-Петербург", "location": "spb"},
 ]
 
 
@@ -52,28 +53,21 @@ async def create_hotel(
                 "summary": "Сочи Пример",
                 "value": {
                     "title": "Отель Соич",
-                    "name": "otel_sochi",
+                    "location": "otel_sochi",
                 },
             },
             "2": {
                 "summary": "Дубай Пример",
                 "value": {
                     "title": "Отель Дубай",
-                    "name": "otel_dubai",
+                    "location": "otel_dubai",
                 },
             },
         }
     ),
 ):
-    global hotels
-    hotels.append(
-        {
-            "id": hotels[-1]["id"] + 1,
-            "title": hotels_data.title,
-            "name": hotels_data.name,
-        }
-    )
-    return {"status": "ok"}
+    async with async_session_maker():
+        pass
 
 
 # PUT
@@ -84,7 +78,7 @@ async def put_hotel(
 ):
     global hotels
     hotels[hotel_id - 1]["title"] = hotels_data.title
-    hotels[hotel_id - 1]["name"] = hotels_data.name
+    hotels[hotel_id - 1]["location"] = hotels_data.location
     return {"status": "ok"}
 
 
@@ -98,6 +92,6 @@ async def patch_hotel(
     hotel = [hotel for hotel in hotels if hotel["id"] == hotel_id][0]
     if hotels_data.title is not None:
         hotel["title"] = hotels_data.title
-    if hotels_data.name is not None:
-        hotel["name"] = hotels_data.name
+    if hotels_data.location is not None:
+        hotel["location"] = hotels_data.location
     return hotel
