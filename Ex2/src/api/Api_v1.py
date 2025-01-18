@@ -54,7 +54,6 @@ async def create_hotel(
     ),
 ):
     async with async_session_maker() as session:
-
         result = await HotelsRepository(session).add(hotels_data)
 
         await session.commit()  # не вносить в репо

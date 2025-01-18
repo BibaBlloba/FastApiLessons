@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from sqlalchemy import insert, select
 
+from src.database import Base
+
 
 class BaseRepository:
-    model = None
+    model = Base
 
     def __init__(self, session):
         self.session = session
@@ -24,4 +26,4 @@ class BaseRepository:
         )
         result = await self.session.execute(add_data_stmt)
 
-        return result.scalars().one_or_none()
+        return result.scalars().one()
