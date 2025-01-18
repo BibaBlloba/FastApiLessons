@@ -7,7 +7,7 @@ from src.database import async_session_maker
 from src.models.hotels import HotelsOrm
 from src.schemas.hotels import Hotel, HotelPATCH
 
-router = APIRouter(prefix="/hotels", tags=["Отели"])
+router = APIRouter(prefix="", tags=["Отели"])
 
 
 # GET
@@ -54,10 +54,11 @@ async def create_hotel(
     ),
 ):
     async with async_session_maker() as session:
-        add_hotel_stmt = insert(HotelsOrm).values(**hotels_data.model_dump())
-        await session.execute(add_hotel_stmt)
-        await session.commit()
-        return {"status": "ok"}
+
+        result = await HotelsRepository(session).create_hotel(hotels_data)
+
+        await session.commit()  # не вносить в репо
+        return {"status": "ok", "data": result}
 
 
 # PUT
