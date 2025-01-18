@@ -69,9 +69,8 @@ async def put_hotel(
     hotels_data: Hotel,
 ):
     async with async_session_maker() as session:
-        query = select(HotelsOrm).filter_by(
-            id=hotel_id, title=hotels_data.title, location=hotels_data.location
-        )
+        await HotelsRepository(session).edit(hotels_data, id=hotel_id)
+        await session.commit()
         return {"status": "ok"}
 
 

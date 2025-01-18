@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from sqlalchemy import delete, insert, select
+from sqlalchemy import delete, insert, select, update
 
 from schemas.hotels import Hotel
 from src.database import Base
@@ -34,7 +34,10 @@ class BaseRepository:
         data: BaseModel,
         **filter_by,
     ) -> None:
-        pass
+        update_stmt = (
+            update(self.model).filter_by(**filter_by).values(data.model_dump())
+        )
+        await self.session.execute(update_stmt)
 
     async def delete_by_id(self, **filter_by) -> None:
         pass
