@@ -1,3 +1,5 @@
+from select import select
+
 from fastapi import APIRouter, Body, Query
 from sqlalchemy import insert
 
@@ -66,10 +68,11 @@ async def put_hotel(
     hotel_id: int,
     hotels_data: Hotel,
 ):
-    global hotels
-    hotels[hotel_id - 1]["title"] = hotels_data.title
-    hotels[hotel_id - 1]["location"] = hotels_data.location
-    return {"status": "ok"}
+    async with async_session_maker() as session:
+        query = select(HotelsOrm).filter_by(
+            id=hotel_id, title=hotels_data.title, location=hotels_data.location
+        )
+        return {"status": "ok"}
 
 
 # PATCH
@@ -85,3 +88,13 @@ async def patch_hotel(
     if hotels_data.location is not None:
         hotel["location"] = hotels_data.location
     return hotel
+
+
+@router.delete("/hotel/{hotel_id}")
+async def remove_hotels(
+    hotel_id: int,
+):
+    async with async_session_maker() as session:
+        await HotelsRepository(session).delete(id=hotel_id)
+        await session.commit()
+        return {"status": "ok"}
