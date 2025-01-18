@@ -36,11 +36,11 @@ async def get_hotels(
         query = select(HotelsOrm)
         if location:
             query = query.filter(
-                func.lower(HotelsOrm.location).like(f"%{location.strip().lower()}")
+                func.lower(HotelsOrm.location).contains(location.strip().lower())
             )
         if title:
             query = query.filter(
-                func.lower(HotelsOrm.title).like(f"%{title.strip().lower()}")
+                func.lower(HotelsOrm.title).contains(title.strip().lower())
             )
         query = query.limit(per_page).offset(per_page * (pagination.page - 1))
 
