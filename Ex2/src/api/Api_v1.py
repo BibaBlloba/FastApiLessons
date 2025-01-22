@@ -33,6 +33,12 @@ async def get_hotels(
         )
 
 
+@router.get("/hotels/{hotel_id}")
+async def get_hotel_by_id(hotel_id: int):
+    async with async_session_maker() as session:
+        return await HotelsRepository(session).get_one_or_none(id=hotel_id)
+
+
 # POST
 @router.post("/hotels")
 async def create_hotel(
@@ -81,7 +87,9 @@ async def patch_hotel(
     hotels_data: HotelPATCH,
 ):
     async with async_session_maker() as session:
-        await HotelsRepository(session).edit(hotels_data, exclude_unset=True id=hotel_id)
+        await HotelsRepository(session).edit(
+            hotels_data, exclude_unset=True, id=hotel_id
+        )
         await session.commit()
         return {"status": "ok"}
 
