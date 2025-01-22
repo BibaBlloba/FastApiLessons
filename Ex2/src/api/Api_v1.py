@@ -80,15 +80,13 @@ async def patch_hotel(
     hotel_id: int,
     hotels_data: HotelPATCH,
 ):
-    global hotels
-    hotel = [hotel for hotel in hotels if hotel["id"] == hotel_id][0]
-    if hotels_data.title is not None:
-        hotel["title"] = hotels_data.title
-    if hotels_data.location is not None:
-        hotel["location"] = hotels_data.location
-    return hotel
+    async with async_session_maker() as session:
+        await HotelsRepository(session).edit(hotels_data, exclude_unset=True id=hotel_id)
+        await session.commit()
+        return {"status": "ok"}
 
 
+# Delete
 @router.delete("/hotel/{hotel_id}")
 async def remove_hotels(
     hotel_id: int,
