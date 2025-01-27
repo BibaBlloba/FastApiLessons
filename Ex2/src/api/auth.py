@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Body
+from passlib.context import CryptContext
 
 from repos.users import UsersRepository
-from schemas.users import UserRequestAdd
+from schemas.users import UserAdd, UserRequestAdd
 from src.database import async_session_maker
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 @router.post("/regisger")
@@ -34,8 +37,16 @@ async def register_user(
         }
     ),
 ):
+    hashed_password = pwd_context.hash(data.password)
+    hashed_user_data = UserAdd(
+        first_name=data.first_name,
+        last_name=data.last_name,
+        login=data.login,
+        email=data.email,
+        hashed_password=hashed_password,
+    )
     async with async_session_maker() as session:
-        user = await UsersRepository(session).add(data)
+        user = await UsersRepository(session).add(hashed_user_data)
         await session.commit()
 
-        return {"status": "ok", "data": data}
+        return {"status": "ok"}
