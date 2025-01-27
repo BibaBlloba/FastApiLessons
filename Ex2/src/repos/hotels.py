@@ -1,11 +1,13 @@
 from sqlalchemy import func, insert, select
 
+from schemas.hotels import Hotel
 from src.models.hotels import HotelsOrm
 from src.repos.base import BaseRepository
 
 
 class HotelsRepository(BaseRepository):
     model = HotelsOrm
+    schema = Hotel
 
     async def get_all(
         self,
@@ -27,4 +29,7 @@ class HotelsRepository(BaseRepository):
 
         result = await self.session.execute(query)
 
-        return result.scalars().all()
+        return [
+            self.schema.model_validate(hotel, from_attributes=True)
+            for hotel in result.scalars().all()
+        ]
