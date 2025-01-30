@@ -24,7 +24,7 @@ class BaseRepository:
         query = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(query)
         res = result.scalars().one_or_none()
-        if res in None:
+        if res is None:
             return None
         return self.schema.validate(res)
 
