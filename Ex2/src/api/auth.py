@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, HTTPException, Response
+from fastapi import APIRouter, Body, HTTPException, Request, Response
 
 from repos.users import UsersRepository
 from schemas.users import UserAdd, UserLogin, UserRequestAdd
@@ -76,3 +76,13 @@ async def login_user(
         access_token = AuthService().create_access_token({"user_id": user.id})
         response.set_cookie("access_token", access_token)
         return {"access_token": access_token}
+
+
+@router.get("/only_auth")
+async def only_auth(
+    request: Request,
+):
+    access_token = request.cookies.get("access_token") or None
+    if access_token is None:
+        raise HTTPException(401)
+    return {"access_token": access_token}
