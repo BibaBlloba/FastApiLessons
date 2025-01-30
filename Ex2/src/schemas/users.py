@@ -25,6 +25,10 @@ class UserAdd(BaseModel):
 
 
 class User(BaseModel):
+    first_name: str | None = Field(None)
+    last_name: str | None = Field(None)
+    login: str | None = Field(None)
+
     id: int
     email: EmailStr
 
