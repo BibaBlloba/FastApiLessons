@@ -85,4 +85,8 @@ async def only_auth(
     access_token = request.cookies.get("access_token", None)
     if access_token is None:
         raise HTTPException(401)
-    return {"access_token": access_token}
+    data = AuthService().decode_token(access_token)
+    user_id = data.get("user_id")
+    async with async_session_maker() as session:
+        result = await UsersRepository(session).get_one_or_none(id=user_id)
+        return result
