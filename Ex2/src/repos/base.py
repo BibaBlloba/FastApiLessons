@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy import delete, insert, select, update
 
@@ -32,7 +33,10 @@ class BaseRepository:
         add_data_stmt = (
             insert(self.model).values(**data.model_dump()).returning(self.model)
         )
-        result = await self.session.execute(add_data_stmt)
+        try:
+            result = await self.session.execute(add_data_stmt)
+        except:
+            raise HTTPException(401, "Пользователь уже зарегестрирован.")
         model = result.scalars().one()
         return self.schema.validate(model)
 

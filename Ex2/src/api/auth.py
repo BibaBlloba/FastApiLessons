@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Body, HTTPException, Request, Response
+from fastapi import APIRouter, Body, HTTPException, Response
 
+from api.dependencies import UserIdDap
 from repos.users import UsersRepository
 from schemas.users import UserAdd, UserLogin, UserRequestAdd
 from services.auth import AuthService
@@ -44,7 +45,7 @@ async def register_user(
         hashed_password=hashed_password,
     )
     async with async_session_maker() as session:
-        user = await UsersRepository(session).add(hashed_user_data)
+        await UsersRepository(session).add(hashed_user_data)
         await session.commit()
 
         return {"status": "ok"}
@@ -78,15 +79,21 @@ async def login_user(
         return {"access_token": access_token}
 
 
-@router.get("/only_auth")
-async def only_auth(
-    request: Request,
+@router.post("/logout")
+async def logout(
+    user_id: UserIdDap,
+    response: Response,
 ):
-    access_token = request.cookies.get("access_token", None)
-    if access_token is None:
-        raise HTTPException(401)
-    data = AuthService().decode_token(access_token)
-    user_id = data.get("user_id")
+    async with async_session_maker() as session:
+        response.delete_cookie("access_token")
+        # raise HTTPException(status_code=200)
+        return {"status": "ok"}
+
+
+@router.get("/me")
+async def get_me(
+    user_id: UserIdDap,
+):
     async with async_session_maker() as session:
         result = await UsersRepository(session).get_one_or_none(id=user_id)
         return result
