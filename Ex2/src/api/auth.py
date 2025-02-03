@@ -79,6 +79,17 @@ async def login_user(
         return {"access_token": access_token}
 
 
+@router.post("/logout")
+async def logout(
+    user_id: UserIdDap,
+    response: Response,
+):
+    async with async_session_maker() as session:
+        response.delete_cookie("access_token")
+        # raise HTTPException(status_code=200)
+        return {"status": "ok"}
+
+
 @router.get("/me")
 async def get_me(
     user_id: UserIdDap,
