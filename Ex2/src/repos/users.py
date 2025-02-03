@@ -13,5 +13,4 @@ class UsersRepository(BaseRepository):
     async def get_uesr_with_hashedPwd(self, email: EmailStr):
         query = select(self.model).filter_by(email=email)
         result = await self.session.execute(query)
-        res = result.scalars().one()
-        return UserHashedPwd.validate(res)
+        return result.scalars().one_or_none()
