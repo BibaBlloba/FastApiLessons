@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.util import hybridproperty
 
-from database import Base
+from src.database import Base
 
 
 class BookingsOrm(Base):
