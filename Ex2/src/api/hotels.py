@@ -34,14 +34,14 @@ async def get_hotels(
 
 
 @router.get("/hotels/{hotel_id}")
-async def get_hotel_by_id(hotel_id: int):
-    async with async_session_maker() as session:
-        return await HotelsRepository(session).get_one_or_none(id=hotel_id)
+async def get_hotel_by_id(db: DbDep, hotel_id: int):
+    return await db.hotels.get_one_or_none(id=hotel_id)
 
 
 # POST
 @router.post("/hotels")
 async def create_hotel(
+    db: DbDep,
     hotels_data: HotelAdd = Body(
         openapi_examples={
             "1": {
@@ -61,11 +61,8 @@ async def create_hotel(
         }
     ),
 ):
-    async with async_session_maker() as session:
-        result = await HotelsRepository(session).add(hotels_data)
-
-        await session.commit()  # не вносить в репо
-        return {"status": "ok", "data": result}
+    result = await db.hotels.add(hotels_data)
+    return {"status": "ok", "data": result}
 
 
 # PUT
@@ -73,11 +70,10 @@ async def create_hotel(
 async def put_hotel(
     hotel_id: int,
     hotels_data: HotelAdd,
+    db: DbDep,
 ):
-    async with async_session_maker() as session:
-        await HotelsRepository(session).edit(hotels_data, id=hotel_id)
-        await session.commit()
-        return {"status": "ok"}
+    await db.hotels.edit(hotels_data, id=hotel_id)
+    return {"status": "ok"}
 
 
 # PATCH
@@ -85,21 +81,17 @@ async def put_hotel(
 async def patch_hotel(
     hotel_id: int,
     hotels_data: HotelPATCH,
+    db: DbDep,
 ):
-    async with async_session_maker() as session:
-        await HotelsRepository(session).edit(
-            hotels_data, exclude_unset=True, id=hotel_id
-        )
-        await session.commit()
-        return {"status": "ok"}
+    await db.hotels.edit(hotels_data, exclude_unset=True, id=hotel_id)
+    return {"status": "ok"}
 
 
 # Delete
 @router.delete("/hotel/{hotel_id}")
 async def remove_hotels(
     hotel_id: int,
+    db: DbDep,
 ):
-    async with async_session_maker() as session:
-        await HotelsRepository(session).delete(id=hotel_id)
-        await session.commit()
-        return {"status": "ok"}
+    await db.hotels.delete(id=hotel_id)
+    return {"status": "ok"}
