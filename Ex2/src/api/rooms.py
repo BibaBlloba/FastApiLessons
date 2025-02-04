@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from repos.rooms import RoomsRepository
-from schemas.rooms import RoomAdd, RoomPATCH
+from schemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
 from src.database import async_session_maker
 
 router = APIRouter(prefix="/hotels", tags=["Номера"])
@@ -15,12 +15,14 @@ async def get_rooms(
         return await RoomsRepository(session).get_all(hotel_id=hotel_id)
 
 
-@router.post("/rooms")
+@router.post("/{hotel_id}/rooms")
 async def add_room(
-    data: RoomAdd,
+    hotel_id: int,
+    data: RoomAddRequest,
 ):
+    _room_data = RoomAdd(hotel_id=hotel_id, **data.model_dump())
     async with async_session_maker() as session:
-        result = await RoomsRepository(session).add(data)
+        result = await RoomsRepository(session).add(_room_data)
         await session.commit()
         return result
 
@@ -32,7 +34,7 @@ async def get_room_by_id(
 ):
     async with async_session_maker() as session:
         return await RoomsRepository(session).get_one_or_none(
-            hotel_id=hotel_id, id=room_id
+            id=room_id, hotel_id=hotel_id
         )
 
 
@@ -40,10 +42,11 @@ async def get_room_by_id(
 async def put_room(
     hotel_id: int,
     room_id: int,
-    data: RoomAdd,
+    data: RoomAddRequest,
 ):
+    _room_data = RoomAdd(hotel_id=hotel_id, **data.model_dump())
     async with async_session_maker() as session:
-        await RoomsRepository(session).edit(data, hotel_id=hotel_id, id=room_id)
+        await RoomsRepository(session).edit(_room_data, id=room_id, hotel_id=hotel_id)
         await session.commit()
         raise HTTPException(status_code=201)
 
@@ -52,11 +55,12 @@ async def put_room(
 async def patch_room(
     hotel_id: int,
     room_id: int,
-    data: RoomPATCH,
+    data: RoomPatchRequest,
 ):
+    _room_data = RoomPatch(hotel_id=hotel_id, **data.model_dump(exclude_unset=True))
     async with async_session_maker() as session:
         await RoomsRepository(session).edit(
-            data,
+            _room_data,
             exclude_unset=True,
             hotel_id=hotel_id,
             id=room_id,
