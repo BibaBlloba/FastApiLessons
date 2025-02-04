@@ -1,8 +1,8 @@
-"""newDatabase
+"""add book
 
-Revision ID: 7e28959a8033
+Revision ID: 76626a11cd0c
 Revises: 
-Create Date: 2025-01-30 18:44:12.062106
+Create Date: 2025-02-04 23:44:41.094383
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "7e28959a8033"
+revision: str = "76626a11cd0c"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
