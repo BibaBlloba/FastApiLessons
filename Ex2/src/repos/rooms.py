@@ -16,7 +16,7 @@ class RoomsRepository(BaseRepository):
         result = await self.session.execute(query)
         result_array = result.scalars().all()
         if not result_array:
-            raise HTTPException(status_code=404, detail="Отель не найден.")
+            raise HTTPException(status_code=404, detail="Отель пустой не найден.")
         return [
             self.schema.model_validate(model, from_attributes=True)
             for model in result_array
