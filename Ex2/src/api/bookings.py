@@ -28,7 +28,7 @@ async def test(
     _data = BookingAdd(
         user_id=user_id,
         price=room_price,
-        **data.dict(),
+        **data.model_dump(),
     )
     result = await db.bookings.add(_data)
     await db.commit()
