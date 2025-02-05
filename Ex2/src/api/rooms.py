@@ -23,7 +23,9 @@ async def add_room(
     db: DbDep,
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **data.model_dump())
-    return await db.rooms.add(_room_data)
+    result = await db.rooms.add(_room_data)
+    await db.commit()
+    return result
 
 
 @router.get("/{hotel_id}/rooms/{room_id}")
