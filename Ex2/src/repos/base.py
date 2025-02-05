@@ -27,16 +27,13 @@ class BaseRepository:
         res = result.scalars().one_or_none()
         if res is None:
             return None
-        return self.schema.validate(res)
+        return self.schema.model_validate(res)
 
     async def add(self, data: BaseModel):
         add_data_stmt = (
             insert(self.model).values(**data.model_dump()).returning(self.model)
         )
-        try:
-            result = await self.session.execute(add_data_stmt)
-        except:
-            raise HTTPException(401, "Пользователь уже зарегестрирован.")
+        result = await self.session.execute(add_data_stmt)
         model = result.scalars().one()
         return self.schema.validate(model)
 
