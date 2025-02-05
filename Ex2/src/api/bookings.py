@@ -40,3 +40,11 @@ async def get_all(
     db: DbDep,
 ):
     return await db.bookings.get_all()
+
+
+@router.get("/me")
+async def get_my_bookings(
+    db: DbDep,
+    user_id: UserIdDap,
+):
+    return await db.bookings.get_filtered(user_id=user_id)
