@@ -13,7 +13,7 @@ async def get_rooms(
     hotel_id: int,
     db: DbDep,
 ):
-    return await db.rooms.get_all(hotel_id=hotel_id)
+    return await db.rooms.get_filtered(hotel_id=hotel_id)
 
 
 @router.post("/{hotel_id}/rooms")

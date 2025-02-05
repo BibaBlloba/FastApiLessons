@@ -16,5 +16,6 @@ class BookingAdd(BookingAddRequest):
 
 class Booking(BookingAdd):
     id: int
+    created_at: date
 
     model_config = ConfigDict(from_attributes=True)
