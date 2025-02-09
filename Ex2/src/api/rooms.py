@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from datetime import date
+
+from fastapi import APIRouter, HTTPException, Query
 
 from api.dependencies import DbDep
 from repos.rooms import RoomsRepository
@@ -12,8 +14,12 @@ router = APIRouter(prefix="/hotels", tags=["Номера"])
 async def get_rooms(
     hotel_id: int,
     db: DbDep,
+    date_from: date = Query(example="2024-08-01"),
+    date_to: date = Query(example="2024-08-10"),
 ):
-    return await db.rooms.get_filtered(hotel_id=hotel_id)
+    return await db.rooms.get_by_time(
+        hotel_id=hotel_id, date_from=date_from, date_to=date_to
+    )
 
 
 @router.post("/{hotel_id}/rooms")

@@ -9,6 +9,7 @@ from src.database import Base
 
 class BookingsOrm(Base):
     __tablename__ = "bookings"
+    __table_args__ = {"keep_existing": True}
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
