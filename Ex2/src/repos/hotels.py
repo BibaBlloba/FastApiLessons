@@ -2,7 +2,7 @@ from datetime import date
 
 from sqlalchemy import func, insert, select
 
-from models.rooms import RoomsOrm
+from src.models.rooms import RoomsOrm
 from repos.utils import rooms_ids_for_booking
 from schemas.hotels import Hotel
 from src.models.hotels import HotelsOrm

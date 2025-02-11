@@ -4,7 +4,7 @@ import jwt
 from fastapi import Depends, HTTPException, Query, Request
 from pydantic import BaseModel
 
-from database import async_session_maker
+from src.database import async_session_maker
 from services.auth import AuthService
 from utils.db_manager import DbManager
 

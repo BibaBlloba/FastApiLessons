@@ -4,8 +4,8 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy import delete, func, insert, select, update
 
-from database import engine
-from repos.utils import rooms_ids_for_booking
+from src.database import engine
+from src.repos.utils import rooms_ids_for_booking
 from schemas.rooms import Room
 from src.models.bookings import BookingsOrm
 from src.models.rooms import RoomsOrm

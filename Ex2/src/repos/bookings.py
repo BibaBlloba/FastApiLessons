@@ -1,4 +1,4 @@
-from models.bookings import BookingsOrm
+from src.models.bookings import BookingsOrm
 from repos.base import BaseRepository
 from schemas.bookings import Booking
 
