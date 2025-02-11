@@ -6,7 +6,7 @@ from schemas.bookings import BookingAdd, BookingAddRequest
 router = APIRouter(prefix="/bookings", tags=["Брони"])
 
 
-@router.get("/")
+@router.get("")
 async def get_all(
     db: DbDep,
 ):
@@ -21,7 +21,7 @@ async def get_my_bookings(
     return await db.bookings.get_filtered(user_id=user_id)
 
 
-@router.post("/")
+@router.post("")
 async def test(
     db: DbDep,
     user_id: UserIdDap,
