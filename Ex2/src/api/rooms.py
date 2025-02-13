@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from api.dependencies import DbDep
 from repos.rooms import RoomsRepository
+from schemas.facilities import RoomsFacilityAdd
 from schemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
 from src.database import async_session_maker
 
@@ -29,7 +30,15 @@ async def add_room(
     db: DbDep,
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **data.model_dump())
+
     result = await db.rooms.add(_room_data)
+
+    rooms_facilities_data = [
+        RoomsFacilityAdd(room_id=result.id, facility_id=f_id)
+        for f_id in data.facilities_ids
+    ]
+    await db.rooms_facilities.add_bulk(rooms_facilities_data)
+
     await db.commit()
     return result
 
@@ -53,7 +62,13 @@ async def put_room(
     db: DbDep,
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **data.model_dump())
-    await db.rooms.edit(_room_data, id=room_id, hotel_id=hotel_id)
+    result = await db.rooms.edit(_room_data, id=room_id, hotel_id=hotel_id)
+
+    await db.rooms_facilities.set_facilities(
+        room_id=room_id, facilities_ids=data.facilities_ids
+    )
+
+    await db.commit()
     raise HTTPException(status_code=201)
 
 
@@ -64,13 +79,23 @@ async def patch_room(
     data: RoomPatchRequest,
     db: DbDep,
 ):
-    _room_data = RoomPatch(hotel_id=hotel_id, **data.model_dump(exclude_unset=True))
+    _room_data_dict = data.model_dump(exclude_unset=True)
+    _room_data = RoomPatch(hotel_id=hotel_id, **_room_data_dict)
+
     await db.rooms.edit(
         _room_data,
         exclude_unset=True,
         hotel_id=hotel_id,
         id=room_id,
     )
+
+    if "facilities_ids" in _room_data_dict:
+        await db.rooms_facilities.set_facilities(
+            room_id=room_id, facilities_ids=_room_data_dict.get("facilities_ids")
+        )
+
+    await db.commit()
+
     raise HTTPException(status_code=201)
 
 
