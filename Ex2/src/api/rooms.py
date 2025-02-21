@@ -23,6 +23,17 @@ async def get_rooms(
     )
 
 
+@router.get("/{hotel_id}/rooms/{room_id}")
+async def get_room_by_id(
+    hotel_id: int,
+    room_id: int,
+    db: DbDep,
+):
+    result = await db.rooms.get_one_or_none(id=room_id, hotel_id=hotel_id)
+    print(result)
+    return result
+
+
 @router.post("/{hotel_id}/rooms")
 async def add_room(
     hotel_id: int,
@@ -40,17 +51,6 @@ async def add_room(
     await db.rooms_facilities.add_bulk(rooms_facilities_data)
 
     await db.commit()
-    return result
-
-
-@router.get("/{hotel_id}/rooms/{room_id}")
-async def get_room_by_id(
-    hotel_id: int,
-    room_id: int,
-    db: DbDep,
-):
-    result = await db.rooms.get_one_or_none(id=room_id, hotel_id=hotel_id)
-    print(result)
     return result
 
 
