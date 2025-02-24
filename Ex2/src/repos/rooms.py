@@ -1,13 +1,10 @@
 from datetime import date
 
-from fastapi import HTTPException
-from pydantic import BaseModel
-from sqlalchemy import delete, func, insert, select, update
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
-from schemas.rooms import Room, RoomWithRels
-from src.database import engine
-from src.models.bookings import BookingsOrm
+from repos.mappers.mappers import RoomsDataMapper
+from schemas.rooms import RoomWithRels
 from src.models.rooms import RoomsOrm
 from src.repos.base import BaseRepository
 from src.repos.utils import rooms_ids_for_booking
@@ -15,7 +12,7 @@ from src.repos.utils import rooms_ids_for_booking
 
 class RoomsRepository(BaseRepository):
     model = RoomsOrm
-    schema = Room
+    mapper = RoomsDataMapper
 
     async def get_by_time(
         self,

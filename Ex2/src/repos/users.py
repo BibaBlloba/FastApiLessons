@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import insert, select
 
+from repos.mappers.mappers import UsersDataMapper
 from schemas.users import User, UserHashedPwd
 from src.models.users import UsersOrm
 from src.repos.base import BaseRepository
@@ -9,7 +10,7 @@ from src.repos.base import BaseRepository
 
 class UsersRepository(BaseRepository):
     model = UsersOrm
-    schema = User
+    mapper = UsersDataMapper
 
     async def get_uesr_with_hashedPwd(self, email: EmailStr):
         query = select(self.model).filter_by(email=email)
@@ -25,4 +26,4 @@ class UsersRepository(BaseRepository):
         except:
             raise HTTPException(401, "Пользователь уже зарегестрирован.")
         model = result.scalars().one()
-        return self.schema.validate(model)
+        return self.mapper.map_to_domain_entity(model)

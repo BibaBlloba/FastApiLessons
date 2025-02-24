@@ -89,8 +89,9 @@ async def patch_hotel(
     hotels_data: HotelPATCH,
     db: DbDep,
 ):
-    await db.hotels.edit(hotels_data, exclude_unset=True, id=hotel_id)
-    return {"status": "ok"}
+    result = await db.hotels.edit(hotels_data, exclude_unset=True, id=hotel_id)
+    await db.commit()
+    return result
 
 
 # Delete
@@ -100,4 +101,5 @@ async def remove_hotels(
     db: DbDep,
 ):
     await db.hotels.delete(id=hotel_id)
+    await db.commit()
     return {"status": "ok"}

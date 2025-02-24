@@ -1,14 +1,11 @@
-from pydantic import BaseModel
 from sqlalchemy import delete, insert, select
 
 from repos.base import BaseRepository
-from schemas.facilities import RoomsFacility
 from src.models.facilities import RoomsFacilitiesOrm
 
 
 class Rooms_Facilities(BaseRepository):
     model = RoomsFacilitiesOrm
-    schema = RoomsFacility
 
     async def set_facilities(self, room_id: int, facilities_ids: list[int]):
         get_current_facilities = select(self.model.facility_id).filter_by(

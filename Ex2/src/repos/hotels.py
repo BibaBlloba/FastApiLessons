@@ -2,16 +2,16 @@ from datetime import date
 
 from sqlalchemy import func, insert, select
 
-from src.models.rooms import RoomsOrm
+from repos.mappers.mappers import HotelDataMapper
 from repos.utils import rooms_ids_for_booking
-from schemas.hotels import Hotel
 from src.models.hotels import HotelsOrm
+from src.models.rooms import RoomsOrm
 from src.repos.base import BaseRepository
 
 
 class HotelsRepository(BaseRepository):
     model = HotelsOrm
-    schema = Hotel
+    mapper = HotelDataMapper
 
     async def get_by_time(
         self,
