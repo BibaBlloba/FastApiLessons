@@ -1,6 +1,7 @@
 import json
 
 from fastapi import APIRouter, HTTPException
+from fastapi_cache.decorator import cache
 
 from api.dependencies import DbDep
 from schemas.facilities import FacilityAdd
@@ -10,20 +11,10 @@ router = APIRouter(prefix="/facilities", tags=["Сервисы"])
 
 
 @router.get("")
+@cache(expire=10)  # в секундах
 async def get_all_facilities(db: DbDep):
-    facilities_from_cache = await redis_manager.get("facilities")
-    print(f"{facilities_from_cache=}")
-
-    if not facilities_from_cache:
-        facilities = await db.facilities.get_all()
-        facilities_schemas: list[dict] = [f.model_dump() for f in facilities]
-        facilities_json = json.dumps(facilities_schemas)
-        await redis_manager.set("facilities", facilities_json, expire=10)
-
-        return facilities
-
-    facilities_dicts = json.loads(facilities_from_cache)
-    return facilities_dicts
+    print("Иду в БД")  # Для дебага
+    return await db.facilities.get_all()
 
 
 @router.post("")

@@ -11,7 +11,7 @@ class RedisManager:
         """
         self.host = host
         self.port = port
-        self.client: Optional[redis.Redis] = None
+        self.client: redis.Redis
 
     async def connect(self):
         """
