@@ -2,10 +2,10 @@ from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import insert, select
 
-from repos.mappers.mappers import UsersDataMapper
-from schemas.users import User, UserHashedPwd
 from src.models.users import UsersOrm
 from src.repos.base import BaseRepository
+from src.repos.mappers.mappers import UsersDataMapper
+from src.schemas.users import User, UserHashedPwd
 
 
 class UsersRepository(BaseRepository):

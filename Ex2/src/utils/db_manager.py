@@ -1,9 +1,9 @@
-from repos.bookings import BookingsRepository
-from repos.facilities import FacilitiesRepository
-from repos.hotels import HotelsRepository
-from repos.rooms import RoomsRepository
-from repos.rooms_facilities import Rooms_Facilities
-from repos.users import UsersRepository
+from src.repos.bookings import BookingsRepository
+from src.repos.facilities import FacilitiesRepository
+from src.repos.hotels import HotelsRepository
+from src.repos.rooms import RoomsRepository
+from src.repos.rooms_facilities import Rooms_Facilities
+from src.repos.users import UsersRepository
 
 
 class DbManager:

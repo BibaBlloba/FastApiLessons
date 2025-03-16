@@ -1,7 +1,7 @@
 from sqlalchemy import delete, insert, select
 
-from repos.base import BaseRepository
 from src.models.facilities import RoomsFacilitiesOrm
+from src.repos.base import BaseRepository
 
 
 class Rooms_Facilities(BaseRepository):
