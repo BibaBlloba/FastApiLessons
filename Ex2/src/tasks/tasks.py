@@ -15,7 +15,7 @@ def test_task():
     print("Найс")
 
 
-@celery_instance.task
+# @celery_instance.task
 def resize_and_save_image(image_path, filename):
     # Открытие исходного изображения
     with Image.open(image_path) as img:
