@@ -9,7 +9,7 @@ from src.database import async_session_maker
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@router.post("/regisger")
+@router.post("/register")
 async def register_user(
     db: DbDep,
     data: UserRequestAdd = Body(
