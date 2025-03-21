@@ -16,7 +16,7 @@ class RoomAdd(BaseModel):
     title: str
     desription: str | None = Field(None)
     price: int
-    quanity: int
+    quantity: int
 
 
 class Room(RoomAdd):

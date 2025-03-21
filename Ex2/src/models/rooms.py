@@ -12,7 +12,7 @@ class RoomsOrm(Base):
     title: Mapped[str]
     desription: Mapped[str | None]
     price: Mapped[int]
-    quanity: Mapped[int]
+    quantity: Mapped[int]
 
     facilities: Mapped[list["FacilitiesOrm"]] = relationship(
         back_populates="rooms",  # атрибут таблици, к которой нужно привязаться
