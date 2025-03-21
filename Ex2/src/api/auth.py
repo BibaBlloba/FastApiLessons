@@ -45,9 +45,9 @@ async def register_user(
         email=data.email,
         hashed_password=hashed_password,
     )
-    await db.users.add(hashed_user_data)
+    result = await db.users.add(hashed_user_data)
     await db.commit()
-    return {"status": "ok"}
+    return result
 
 
 @router.post("/login")
