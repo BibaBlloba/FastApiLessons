@@ -4,6 +4,7 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine
 
+from api.dependencies import get_db
 from schemas.hotels import HotelAdd
 from schemas.rooms import RoomAdd
 from src.config import settings
@@ -13,10 +14,18 @@ from src.models import *
 from src.utils.db_manager import DbManager
 
 
-@pytest.fixture()
-async def db():
+async def get_db_null_pull():
     async with DbManager(session_factory=async_session_maker_null_pool) as db:
         yield db
+
+
+@pytest.fixture()
+async def db():
+    async for db in get_db_null_pull():
+        yield db
+
+
+app.dependency_overrides[get_db] = get_db_null_pull
 
 
 @pytest.fixture(autouse=True, scope="session")

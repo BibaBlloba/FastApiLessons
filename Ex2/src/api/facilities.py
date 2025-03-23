@@ -1,6 +1,7 @@
 import json
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi_cache.decorator import cache
 
 from api.dependencies import DbDep
@@ -13,7 +14,7 @@ router = APIRouter(prefix="/facilities", tags=["Сервисы"])
 
 
 @router.get("")
-@cache(expire=10)  # в секундах
+# @cache(expire=10)  # в секундах
 # @custom_cache()
 async def get_all_facilities(db: DbDep):
     print("Иду в БД")  # Для дебага
@@ -25,9 +26,9 @@ async def create_facility(
     db: DbDep,
     data: FacilityAdd,
 ):
-    await db.facilities.add(data)
+    result = await db.facilities.add(data)
     await db.commit()
 
     test_task.delay()
 
-    raise HTTPException(201)
+    return JSONResponse(status_code=201, content=result.json())

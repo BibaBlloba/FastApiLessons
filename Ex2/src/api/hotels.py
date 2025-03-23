@@ -2,6 +2,7 @@ from datetime import date
 from select import select
 
 from fastapi import APIRouter, Body, Query
+from fastapi_cache.decorator import cache
 from sqlalchemy import insert
 
 from repos.hotels import HotelsRepository
@@ -14,6 +15,7 @@ router = APIRouter(prefix="", tags=["Отели"])
 
 
 # GET
+# @cache(expire=10)
 @router.get(
     "/hotels",
     summary="Получение отелей",
