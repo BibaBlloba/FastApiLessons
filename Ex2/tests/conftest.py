@@ -1,6 +1,18 @@
 import json
+from unittest import mock
+
+
+def empty_cache(*args, **kwargs):
+    def wrapper(func):
+        return func
+
+    return wrapper
+
+
+mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
 
 import pytest
+from fastapi import Request
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine
 

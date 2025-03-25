@@ -15,7 +15,7 @@ router = APIRouter(prefix="", tags=["Отели"])
 
 
 # GET
-# @cache(expire=10)
+@cache(expire=10)
 @router.get(
     "/hotels",
     summary="Получение отелей",

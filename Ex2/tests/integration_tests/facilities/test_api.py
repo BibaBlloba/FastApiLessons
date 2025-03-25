@@ -10,6 +10,6 @@ async def test_get_facilities(ac):
 
 
 async def test_post_facilities(ac):
-    response = await ac.post(url="/facilities", data=json.dumps({"title": "test"}))
+    response = await ac.post(url="/facilities", json={"title": "test_facility"})
     print(response.json())
     assert response.status_code == 201

@@ -14,7 +14,7 @@ router = APIRouter(prefix="/facilities", tags=["Сервисы"])
 
 
 @router.get("")
-# @cache(expire=10)  # в секундах
+@cache(expire=10)  # в секундах
 # @custom_cache()
 async def get_all_facilities(db: DbDep):
     print("Иду в БД")  # Для дебага
