@@ -82,3 +82,21 @@ async def register_user(setup_database, ac):
             "login": "Akeka",
         },
     )
+
+
+@pytest.fixture(autouse=True, scope="session")
+async def authenticated_ac(ac, register_user, request: Request):
+    response = await ac.post(
+        "/auth/login",
+        json={
+            "email": "example@user.com",
+            "password": "123",
+        },
+    )
+    assert response.status_code == 200
+    token = response.cookies.get("access_token", None)
+    assert token
+    ac.header.update(
+        {"Authorization": f"Bearer {token}"}
+    )  # Хранит заголовок для авторизации
+    yield ac
