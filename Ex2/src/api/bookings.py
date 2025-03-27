@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 
 from api.dependencies import DbDep, UserIdDap
 from schemas.bookings import BookingAdd, BookingAddRequest
@@ -40,11 +40,15 @@ async def test(
 ):
     room = await db.rooms.get_one_or_none(id=data.room_id)
     room_price: int = room.price
+    hotel = await db.hotels.get_one_or_none(id=room.hotel_id)
     _data = BookingAdd(
         user_id=user_id,
         price=room_price,
         **data.model_dump(),
     )
-    result = await db.bookings.add(_data)
+    try:
+        result = await db.bookings.add(_data, hotel_id=hotel.id)
+    except ValueError:
+        raise HTTPException(400, detail="Больше забронировать нельзя")
     await db.commit()
     return result
