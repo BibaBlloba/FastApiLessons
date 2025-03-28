@@ -11,7 +11,7 @@ def empty_cache(*args, **kwargs):
     return wrapper
 
 
-mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
+mock.patch('fastapi_cache.decorator.cache', lambda *args, **kwargs: lambda f: f).start()
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -40,17 +40,17 @@ async def db():
 app.dependency_overrides[get_db] = get_db_null_pull
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True, scope='session')
 async def ac():
     async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://localhost:8000"
+        transport=ASGITransport(app=app), base_url='http://localhost:8000'
     ) as ac:
         yield ac
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True, scope='session')
 async def setup_database():
-    assert settings.MODE == "TEST"  # Чтобы убедиться, что находимся в тестовой среде
+    assert settings.MODE == 'TEST'  # Чтобы убедиться, что находимся в тестовой среде
 
     async with (
         engine_null_pool.begin() as conn
@@ -58,9 +58,9 @@ async def setup_database():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    with open("tests/mock_data/mock_hotels.json", encoding="utf-8") as file_hotels:
+    with open('tests/mock_data/mock_hotels.json', encoding='utf-8') as file_hotels:
         hotels = json.load(file_hotels)
-    with open("tests/mock_data/mock_rooms.json", encoding="utf-8") as file_rooms:
+    with open('tests/mock_data/mock_rooms.json', encoding='utf-8') as file_rooms:
         rooms = json.load(file_rooms)
 
     hotels = [HotelAdd.model_validate(hotel) for hotel in hotels]
@@ -72,16 +72,16 @@ async def setup_database():
         await db_.commit()
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True, scope='session')
 async def register_user(setup_database, ac):
     response = await ac.post(  # noqa
-        "/auth/register",
+        '/auth/register',
         json={
-            "email": "example@user.com",
-            "password": "123",
-            "first_name": "John",
-            "last_name": "Pork",
-            "login": "Akeka",
+            'email': 'example@user.com',
+            'password': '123',
+            'first_name': 'John',
+            'last_name': 'Pork',
+            'login': 'Akeka',
         },
     )
 
@@ -89,14 +89,14 @@ async def register_user(setup_database, ac):
 @pytest.fixture(autouse=True)
 async def authenticated_ac(ac, register_user):
     response = await ac.post(
-        "/auth/login",
+        '/auth/login',
         json={
-            "email": "example@user.com",
-            "password": "123",
+            'email': 'example@user.com',
+            'password': '123',
         },
     )
     assert response.status_code == 200
-    token = response.cookies.get("access_token", None)
+    token = response.cookies.get('access_token', None)
     assert token
     # ac.headers.update({"Authorization": f"Bearer {token}"})
     yield ac

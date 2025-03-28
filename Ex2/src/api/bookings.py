@@ -3,17 +3,17 @@ from fastapi import APIRouter, Body, HTTPException
 from api.dependencies import DbDep, UserIdDap
 from schemas.bookings import BookingAdd, BookingAddRequest
 
-router = APIRouter(prefix="/bookings", tags=["Брони"])
+router = APIRouter(prefix='/bookings', tags=['Брони'])
 
 
-@router.get("")
+@router.get('')
 async def get_all(
     db: DbDep,
 ):
     return await db.bookings.get_all()
 
 
-@router.get("/me")
+@router.get('/me')
 async def get_my_bookings(
     db: DbDep,
     user_id: UserIdDap,
@@ -21,18 +21,18 @@ async def get_my_bookings(
     return await db.bookings.get_filtered(user_id=user_id)
 
 
-@router.post("")
+@router.post('')
 async def test(
     db: DbDep,
     user_id: UserIdDap,
     data: BookingAddRequest = Body(
         openapi_examples={
-            "1": {
-                "summary": "first bookign",
-                "value": {
-                    "room_id": 1,
-                    "date_from": "2025-02-10",
-                    "date_to": "2025-02-15",
+            '1': {
+                'summary': 'first bookign',
+                'value': {
+                    'room_id': 1,
+                    'date_from': '2025-02-10',
+                    'date_to': '2025-02-15',
                 },
             }
         }
@@ -49,6 +49,6 @@ async def test(
     try:
         result = await db.bookings.add(_data, hotel_id=hotel.id)
     except ValueError:
-        raise HTTPException(400, detail="Больше забронировать нельзя")
+        raise HTTPException(400, detail='Больше забронировать нельзя')
     await db.commit()
     return result

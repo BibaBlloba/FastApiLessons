@@ -23,7 +23,7 @@ from src.init import redis_manager
 async def get_bookings_today_checkin():
     async for db in get_db():
         bookings = await db.bookings.get_bookings_with_today_checkin()
-        print(f"{bookings=}")
+        print(f'{bookings=}')
 
 
 async def run_send_emails_regular():
@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
     # При старте проекта
     asyncio.create_task(run_send_emails_regular())
     await redis_manager.connect()
-    FastAPICache.init(RedisBackend(redis_manager.client), prefix="fastapi-cache")
+    FastAPICache.init(RedisBackend(redis_manager.client), prefix='fastapi-cache')
     yield
     await redis_manager.close()
     # При выключении/перезагрузки проекта
@@ -56,5 +56,5 @@ app.include_router(router_facilities)
 app.include_router(router_images)
 
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True)
+if __name__ == '__main__':
+    uvicorn.run('main:app', reload=True)

@@ -12,26 +12,26 @@ def rooms_ids_for_booking(
     hotel_id: int | None = None,
 ):
     rooms_count = (
-        select(BookingsOrm.room_id, func.count("*").label("rooms_booked"))
+        select(BookingsOrm.room_id, func.count('*').label('rooms_booked'))
         .select_from(BookingsOrm)
         .filter(
             BookingsOrm.date_from <= date_to,
             BookingsOrm.date_to >= date_from,
         )
         .group_by(BookingsOrm.room_id)
-        .cte(name="rooms_booked")
+        .cte(name='rooms_booked')
     )
 
     rooms_left_table = (
         select(
-            RoomsOrm.id.label("room_id"),
+            RoomsOrm.id.label('room_id'),
             (RoomsOrm.quantity - func.coalesce(rooms_count.c.rooms_booked, 0)).label(
-                "rooms_left"
+                'rooms_left'
             ),
         )
         .select_from(RoomsOrm)
         .outerjoin(rooms_count, RoomsOrm.id == rooms_count.c.room_id)
-        .cte(name="rooms_left_table")
+        .cte(name='rooms_left_table')
     )
 
     rooms_ids_for_hotel = select(RoomsOrm.id)

@@ -61,20 +61,20 @@ class RedisManager:
 
 # Пример использования
 async def main():
-    redis_manager = RedisManager("localhost", 6379)
+    redis_manager = RedisManager('localhost', 6379)
     await redis_manager.connect()
 
-    await redis_manager.set("foo", "bar", expire=10)
-    value = await redis_manager.get("foo")
-    print(f"Значение foo: {value}")
+    await redis_manager.set('foo', 'bar', expire=10)
+    value = await redis_manager.get('foo')
+    print(f'Значение foo: {value}')
 
-    await redis_manager.delete("foo")
-    value_after_delete = await redis_manager.get("foo")
-    print(f"Значение foo после удаления: {value_after_delete}")
+    await redis_manager.delete('foo')
+    value_after_delete = await redis_manager.get('foo')
+    print(f'Значение foo после удаления: {value_after_delete}')
 
     await redis_manager.close()
 
 
 # Запуск
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())

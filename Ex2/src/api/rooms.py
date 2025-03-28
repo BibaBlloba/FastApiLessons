@@ -6,22 +6,22 @@ from api.dependencies import DbDep
 from schemas.facilities import RoomsFacilityAdd
 from schemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
 
-router = APIRouter(prefix="/hotels", tags=["Номера"])
+router = APIRouter(prefix='/hotels', tags=['Номера'])
 
 
-@router.get("/{hotel_id}/rooms")
+@router.get('/{hotel_id}/rooms')
 async def get_rooms(
     hotel_id: int,
     db: DbDep,
-    date_from: date = Query(example="2024-08-01"),
-    date_to: date = Query(example="2024-08-10"),
+    date_from: date = Query(example='2024-08-01'),
+    date_to: date = Query(example='2024-08-10'),
 ):
     return await db.rooms.get_by_time(
         hotel_id=hotel_id, date_from=date_from, date_to=date_to
     )
 
 
-@router.get("/{hotel_id}/rooms/{room_id}")
+@router.get('/{hotel_id}/rooms/{room_id}')
 async def get_room_by_id(
     hotel_id: int,
     room_id: int,
@@ -32,7 +32,7 @@ async def get_room_by_id(
     return result
 
 
-@router.post("/{hotel_id}/rooms")
+@router.post('/{hotel_id}/rooms')
 async def add_room(
     hotel_id: int,
     data: RoomAddRequest,
@@ -52,7 +52,7 @@ async def add_room(
     return result
 
 
-@router.put("/{hotel_id}/rooms/{room_id}")
+@router.put('/{hotel_id}/rooms/{room_id}')
 async def put_room(
     hotel_id: int,
     room_id: int,
@@ -70,7 +70,7 @@ async def put_room(
     raise HTTPException(status_code=201)
 
 
-@router.patch("/{hotel_id}/rooms/{room_id}")
+@router.patch('/{hotel_id}/rooms/{room_id}')
 async def patch_room(
     hotel_id: int,
     room_id: int,
@@ -87,9 +87,9 @@ async def patch_room(
         id=room_id,
     )
 
-    if "facilities_ids" in _room_data_dict:
+    if 'facilities_ids' in _room_data_dict:
         await db.rooms_facilities.set_facilities(
-            room_id=room_id, facilities_ids=_room_data_dict.get("facilities_ids")
+            room_id=room_id, facilities_ids=_room_data_dict.get('facilities_ids')
         )
 
     await db.commit()
@@ -97,11 +97,11 @@ async def patch_room(
     raise HTTPException(status_code=201)
 
 
-@router.delete("/{hotel_id}/rooms/{room_id}")
+@router.delete('/{hotel_id}/rooms/{room_id}')
 async def delete_room(
     hotel_id: int,
     room_id: int,
     db: DbDep,
 ):
     await db.rooms.delete(hotel_id=hotel_id, id=room_id)
-    raise HTTPException(status_code=200, detail="Отель удален.")
+    raise HTTPException(status_code=200, detail='Отель удален.')

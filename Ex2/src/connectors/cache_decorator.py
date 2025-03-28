@@ -8,7 +8,7 @@ def custom_cache(expire: int | None = None):
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            key = f"{func.__name__}:{args}"
+            key = f'{func.__name__}:{args}'
 
             cached_result = await redis_manager.get(key)
             if not cached_result:
