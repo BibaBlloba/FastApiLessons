@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 class UserRequestAdd(BaseModel):
     first_name: str | None = Field(None)
     last_name: str | None = Field(None)
-    login: str | None = Field(None)
+    login: str
 
     email: EmailStr
     password: str
@@ -18,7 +18,7 @@ class UserLogin(BaseModel):
 class UserAdd(BaseModel):
     first_name: str | None = Field(None)
     last_name: str | None = Field(None)
-    login: str | None = Field(None)
+    login: str
 
     email: EmailStr
     hashed_password: str

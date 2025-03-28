@@ -37,6 +37,8 @@ async def register_user(
         }
     ),
 ):
+    if data.login == "" or data.password == "":
+        raise HTTPException(401)
     hashed_password = AuthService().hash_password(data.password)
     hashed_user_data = UserAdd(
         first_name=data.first_name,
