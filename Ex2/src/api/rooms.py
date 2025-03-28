@@ -3,10 +3,8 @@ from datetime import date
 from fastapi import APIRouter, HTTPException, Query
 
 from api.dependencies import DbDep
-from repos.rooms import RoomsRepository
 from schemas.facilities import RoomsFacilityAdd
 from schemas.rooms import RoomAdd, RoomAddRequest, RoomPatch, RoomPatchRequest
-from src.database import async_session_maker
 
 router = APIRouter(prefix="/hotels", tags=["Номера"])
 

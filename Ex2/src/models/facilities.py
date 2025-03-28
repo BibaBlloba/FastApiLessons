@@ -1,3 +1,8 @@
+import typing
+
+if typing.TYPE_CHECKING:
+    from src.models import RoomsOrm
+
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

@@ -5,7 +5,6 @@ from sqlalchemy import insert, select
 from src.models.users import UsersOrm
 from src.repos.base import BaseRepository
 from src.repos.mappers.mappers import UsersDataMapper
-from src.schemas.users import User, UserHashedPwd
 
 
 class UsersRepository(BaseRepository):

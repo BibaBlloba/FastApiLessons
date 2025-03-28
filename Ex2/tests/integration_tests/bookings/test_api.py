@@ -1,3 +1,4 @@
+# ruff: noqa: F841
 import pytest
 
 from tests.conftest import get_db_null_pull
@@ -51,7 +52,7 @@ async def test_get_booking(
     db,
     authenticated_ac,
 ):
-    response = await authenticated_ac.post(
+    response = await authenticated_ac.post(  # noqa
         "/bookings",
         json={
             "room_id": room_id,

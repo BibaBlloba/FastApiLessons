@@ -1,14 +1,9 @@
 from datetime import date
-from select import select
 
 from fastapi import APIRouter, Body, Query
 from fastapi_cache.decorator import cache
-from sqlalchemy import insert
 
-from repos.hotels import HotelsRepository
 from src.api.dependencies import DbDep, PaginationDap
-from src.database import async_session_maker
-from src.models.hotels import HotelsOrm
 from src.schemas.hotels import HotelAdd, HotelPATCH
 
 router = APIRouter(prefix="", tags=["Отели"])

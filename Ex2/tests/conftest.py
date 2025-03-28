@@ -1,3 +1,5 @@
+# ruff: noqa: E402
+# ruff: noqa: F403
 import json
 from unittest import mock
 
@@ -12,9 +14,7 @@ def empty_cache(*args, **kwargs):
 mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
 
 import pytest
-from fastapi import Request
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import create_async_engine
 
 from api.dependencies import get_db
 from schemas.hotels import HotelAdd
@@ -52,7 +52,9 @@ async def ac():
 async def setup_database():
     assert settings.MODE == "TEST"  # Чтобы убедиться, что находимся в тестовой среде
 
-    async with engine_null_pool.begin() as conn:  # null_pull нужен чтобы не было ошибок с подключениями к БД
+    async with (
+        engine_null_pool.begin() as conn
+    ):  # null_pull нужен чтобы не было ошибок с подключениями к БД
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
@@ -72,7 +74,7 @@ async def setup_database():
 
 @pytest.fixture(autouse=True, scope="session")
 async def register_user(setup_database, ac):
-    response = await ac.post(
+    response = await ac.post(  # noqa
         "/auth/register",
         json={
             "email": "example@user.com",

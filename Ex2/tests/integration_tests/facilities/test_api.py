@@ -1,6 +1,3 @@
-import json
-
-
 async def test_get_facilities(ac):
     facilities = await ac.get(
         url="/facilities",

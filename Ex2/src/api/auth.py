@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Body, HTTPException, Response
 
 from api.dependencies import DbDep, UserIdDap
-from repos.users import UsersRepository
 from schemas.users import UserAdd, UserLogin, UserRequestAdd
 from services.auth import AuthService
-from src.database import async_session_maker
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
