@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import insert, select
 
+from exceptions import UserAlredyRegistered
 from src.models.users import UsersOrm
 from src.repos.base import BaseRepository
 from src.repos.mappers.mappers import UsersDataMapper
@@ -23,6 +24,6 @@ class UsersRepository(BaseRepository):
         try:
             result = await self.session.execute(add_data_stmt)
         except Exception:
-            raise HTTPException(401, "Пользователь уже зарегестрирован.")
+            raise UserAlredyRegistered
         model = result.scalars().one()
         return self.mapper.map_to_domain_entity(model)

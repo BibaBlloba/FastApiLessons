@@ -11,3 +11,7 @@ class ObjectNotFoundException(NabronirovalException):
 
 class AllRoomsAreBooked(NabronirovalException):
     detail = 'Не осталось свободных мест'
+
+
+class UserAlredyRegistered(NabronirovalException):
+    detail = 'Пользователь уже зарегестрирован'

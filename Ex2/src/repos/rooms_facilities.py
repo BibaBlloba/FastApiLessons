@@ -19,9 +19,9 @@ class Rooms_Facilities(BaseRepository):
         ids_to_create: list[int] = list(
             set(facilities_ids) - set(current_facilities_ids)
         )
-        print(f'current: {facilities_ids}')
-        print(f'to_delete: {ids_to_delete}')
-        print(f'to_create: {ids_to_create}')
+        # print(f'current: {facilities_ids}')
+        # print(f'to_delete: {ids_to_delete}')
+        # print(f'to_create: {ids_to_create}')
 
         if ids_to_delete:
             delete_stmt = delete(self.model).filter(

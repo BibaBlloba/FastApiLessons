@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException, Response
 
 from api.dependencies import DbDep, UserIdDap
+from exceptions import UserAlredyRegistered
 from schemas.users import UserAdd, UserLogin, UserRequestAdd
 from services.auth import AuthService
 
@@ -45,7 +46,10 @@ async def register_user(
         email=data.email,
         hashed_password=hashed_password,
     )
-    result = await db.users.add(hashed_user_data)
+    try:
+        result = await db.users.add(hashed_user_data)
+    except UserAlredyRegistered as ex:
+        return HTTPException(409, ex.detail)
     await db.commit()
     return result
 

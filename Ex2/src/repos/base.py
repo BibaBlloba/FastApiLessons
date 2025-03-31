@@ -2,7 +2,12 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy import delete, insert, select, update
 from asyncpg.exceptions import DataError
-from sqlalchemy.exc import NoResultFound, DBAPIError
+from sqlalchemy.exc import (
+    IntegrityError,
+    NoResultFound,
+    DBAPIError,
+    ResourceClosedError,
+)
 
 from exceptions import ObjectNotFoundException
 from src.database import Base
@@ -53,7 +58,10 @@ class BaseRepository:
         add_data_stmt = (
             insert(self.model).values(**data.model_dump()).returning(self.model)
         )
-        result = await self.session.execute(add_data_stmt)
+        try:
+            result = await self.session.execute(add_data_stmt)
+        except IntegrityError:
+            raise ObjectNotFoundException
         model = result.scalars().one()
         return self.mapper.map_to_domain_entity(model)
 
@@ -73,10 +81,14 @@ class BaseRepository:
             .values(data.model_dump(exclude_unset=exclude_unset))
             .returning(self.model)
         )
-        result = await self.session.execute(update_stmt)
-        model = result.scalars().one()
+        try:
+            result = await self.session.execute(update_stmt)
+            model = result.scalars().one()
+        except NoResultFound:
+            raise ObjectNotFoundException
         return self.mapper.map_to_domain_entity(model)
 
     async def delete(self, **filter_by) -> None:
         delete_stmt = delete(self.model).filter_by(**filter_by)
-        await self.session.execute(delete_stmt)
+        result = await self.session.execute(delete_stmt)
+        return result
