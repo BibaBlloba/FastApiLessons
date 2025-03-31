@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
 
 from api.dependencies import DbDep, UserIdDap
+from exceptions import AllRoomsAreBooked
 from schemas.bookings import BookingAdd, BookingAddRequest
 
 router = APIRouter(prefix='/bookings', tags=['Брони'])
@@ -48,7 +49,7 @@ async def test(
     )
     try:
         result = await db.bookings.add(_data, hotel_id=hotel.id)
-    except ValueError:
-        raise HTTPException(400, detail='Больше забронировать нельзя')
+    except AllRoomsAreBooked as ex:
+        raise HTTPException(409, detail=ex.detail)
     await db.commit()
     return result

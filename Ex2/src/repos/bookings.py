@@ -3,6 +3,7 @@ from datetime import date
 from pydantic import BaseModel
 from sqlalchemy import insert, select
 
+from exceptions import AllRoomsAreBooked
 from repos.utils import rooms_ids_for_booking
 from src.models.bookings import BookingsOrm
 from src.repos.base import BaseRepository
@@ -31,7 +32,7 @@ class BookingsRepository(BaseRepository):
         rooms_ids_to_get = rooms_ids_to_get.scalars().all()
         print(rooms_ids_to_get)
         if data.room_id not in rooms_ids_to_get:
-            raise ValueError
+            raise AllRoomsAreBooked
 
         add_data_stmt = (
             insert(self.model).values(**data.model_dump()).returning(self.model)
