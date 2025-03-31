@@ -23,7 +23,7 @@ from src.init import redis_manager
 async def get_bookings_today_checkin():
     async for db in get_db():
         bookings = await db.bookings.get_bookings_with_today_checkin()
-        print(f'{bookings=}')
+        # print(f'{bookings=}')
 
 
 async def run_send_emails_regular():
