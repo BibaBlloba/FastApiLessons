@@ -49,7 +49,7 @@ async def register_user(
     try:
         result = await db.users.add(hashed_user_data)
     except UserAlredyRegistered as ex:
-        return HTTPException(409, ex.detail)
+        raise HTTPException(409, ex.detail)
     await db.commit()
     return result
 

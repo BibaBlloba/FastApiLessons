@@ -5,7 +5,7 @@ import pytest
     'email, password, first_name, last_name, login, registered_status_code',
     [
         ('example@user2.com', '123', 'Keka', 'Xui', 'kekel2', 200),
-        ('example@user2.com', '123', 'Keka', 'Xui', 'kekel2', 401),
+        ('example@user2.com', '123', 'Keka', 'Xui', 'kekel2', 409),
         ('example@user3.com', '123', 'Keka', 'Xui', 'kekel3', 200),
         ('example@user4.com', '123', 'Keka', 'Xui', 'kekel4', 200),
         ('example@user5.com', '', 'Keka', 'Xui', 'kekel6', 401),
