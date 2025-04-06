@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import insert, select
 

@@ -15,3 +15,7 @@ class AllRoomsAreBooked(NabronirovalException):
 
 class UserAlredyRegistered(NabronirovalException):
     detail = 'Пользователь уже зарегестрирован'
+
+
+class WrongDate(NabronirovalException):
+    detail = 'Неверная дата'

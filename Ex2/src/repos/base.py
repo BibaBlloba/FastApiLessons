@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy import delete, insert, select, update
 from asyncpg.exceptions import DataError
@@ -6,7 +5,6 @@ from sqlalchemy.exc import (
     IntegrityError,
     NoResultFound,
     DBAPIError,
-    ResourceClosedError,
 )
 
 from exceptions import ObjectNotFoundException
