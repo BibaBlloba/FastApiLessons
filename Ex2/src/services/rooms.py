@@ -26,8 +26,8 @@ class RoomsService(BaseService):
     ):
         try:
             result = await self.db.rooms.get_one(id=room_id, hotel_id=hotel_id)
-        except ObjectNotFoundException:
-            raise ObjectNotFoundException
+        except ObjectNotFoundException as ex:
+            raise ex
         return result
 
     async def add_room(
@@ -104,3 +104,24 @@ class RoomsService(BaseService):
         result = await self.db.rooms.delete(hotel_id=hotel_id, id=room_id)
         await self.db.commit()
         return result
+
+
+"""
+Где-то проще и более читаемым будет создать отдельный класс для проверки дат заезда/выезда, наличия отелей и номеров. Сделать двойное наследование RoomsService и HotelsService от BaseService и от этого класса. И тогда в RoomsService не надо будет ничего вызывать из HotelsService.
+Получится что-то вроде:
+
+class DataChecker:
+    @staticmethod
+    async def check_dates(date_from: date, date_to: date) -> None:
+        if date_from >= date_to:
+            raise DateError
+
+    @staticmethod
+    async def check_hotel_available(db: DBManager, hotel_id: int) -> None:
+        ...
+
+class RoomsService(BaseService, DataChecker):
+    async def get_room(self, hotel_id: int, date_from: date, date_to: date):
+        await self.check_dates(date_from, date_to)
+        await self.check_hotel_available(self.db, hotel_id)
+"""
